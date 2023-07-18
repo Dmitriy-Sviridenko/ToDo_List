@@ -9,6 +9,13 @@ form.addEventListener("submit", addTask);
 //удаление задач
 tasksList.addEventListener("click", deleteTask);
 
+//отмечаем задачу завершенной
+tasksList.addEventListener("click", doneTask)
+
+if (localStorage.getItem("tasksHTML")) {
+  tasksList.innerHTML = localStorage.getItem("tasksHTML");
+};
+
 //функции
 function addTask (event) {
   event.preventDefault(); //отменяем отправку формы
@@ -41,15 +48,35 @@ function addTask (event) {
   if (tasksList.children.length > 1){
     emptyList.classList.add("none");
   }
+
+  saveHTMLtoLS();
 }
 
 function deleteTask(event) {
-  if (event.target.dataset.action === "delete"){
-    const parentNode = event.target.closest("li");
-    parentNode.remove();
-  }
+  //проверяем если клик был не по кнопке "удалить задачу"
+  if (event.target.dataset.action !== "delete") return;
+  
+  const parentNode = event.target.closest("li");
+  parentNode.remove();
 
   if (tasksList.children.length === 1){
     emptyList.classList.remove("none");
-  }
+  };
+
+  saveHTMLtoLS();
 };
+
+function doneTask(event){
+  if (event.target.dataset.action !== "done") return
+
+  //проверяем клик по кнопке "задача выполнена"
+  const parentNode = event.target.closest("li");
+  const taskTitle = parentNode.querySelector(".task-title")
+  taskTitle.classList.toggle("task-title--done")
+
+  saveHTMLtoLS();
+}
+
+function saveHTMLtoLS() {
+  localStorage.setItem("tasksHTML", tasksList.innerHTML)
+}
