@@ -3,6 +3,8 @@ const taskInput = document.querySelector("#taskInput");
 const tasksList = document.querySelector("#tasksList");
 const emptyList = document.querySelector("#emptyList");
 
+let tasks = [];
+
 //добавление задачи
 form.addEventListener("submit", addTask);
 
@@ -12,9 +14,6 @@ tasksList.addEventListener("click", deleteTask);
 //отмечаем задачу завершенной
 tasksList.addEventListener("click", doneTask)
 
-if (localStorage.getItem("tasksHTML")) {
-  tasksList.innerHTML = localStorage.getItem("tasksHTML");
-};
 
 //функции
 function addTask (event) {
@@ -23,10 +22,23 @@ function addTask (event) {
   //получаем текст задачи из поля ввода
   const taskText = taskInput.value;
 
+  //описываем задачу в виде объекта
+  const newTask = {
+    id: Date.now(),
+    text: taskText,
+    done: false,
+  };
+
+  //добавлеяем задачу в массив с задачами
+  tasks.push(newTask);
+
+  //Формируем CSS класс
+  const cssClass = newTask.done ? "task-title task-title--done" : "task-title"
+
   //формирование разметки для новой задачи
   const taskHtml = `
-  <li class="list-group-item d-flex justify-content-between task-item">
-    <span class="task-title">${taskText}</span>
+  <li id="${newTask.id}" class="list-group-item d-flex justify-content-between task-item">
+    <span class="${cssClass}">${newTask.text}</span>
     <div class="task-item__buttons">
       <button type="button" data-action="done" class="btn-action">
         <img src="./img/tick.svg" alt="Done" width="18" height="18">
@@ -48,8 +60,6 @@ function addTask (event) {
   if (tasksList.children.length > 1){
     emptyList.classList.add("none");
   }
-
-  saveHTMLtoLS();
 }
 
 function deleteTask(event) {
@@ -57,13 +67,22 @@ function deleteTask(event) {
   if (event.target.dataset.action !== "delete") return;
   
   const parentNode = event.target.closest("li");
+
+  //определяем  ID задачи
+  const id = Number(parentNode.id);
+
+  //находим индекс задачи в массиве
+  const index = tasks.findIndex((task) => task.id === id);
+
+  //удаляем задачу из массива с задачами
+  tasks.splice(index, 1);
+
+  //удаляем задачу из разметки
   parentNode.remove();
 
   if (tasksList.children.length === 1){
     emptyList.classList.remove("none");
   };
-
-  saveHTMLtoLS();
 };
 
 function doneTask(event){
@@ -73,10 +92,5 @@ function doneTask(event){
   const parentNode = event.target.closest("li");
   const taskTitle = parentNode.querySelector(".task-title")
   taskTitle.classList.toggle("task-title--done")
-
-  saveHTMLtoLS();
 }
 
-function saveHTMLtoLS() {
-  localStorage.setItem("tasksHTML", tasksList.innerHTML)
-}
