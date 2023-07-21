@@ -5,13 +5,14 @@ const emptyList = document.querySelector("#emptyList");
 
 let tasks = [];
 
-//добавление задачи
+//проверяем наличие заполненного Storage
+if (localStorage.getItem("tasks")) {
+  tasks = JSON.parse(localStorage.getItem("tasks"));
+  tasks.forEach((task) => renderTask (task));
+};
+ckeckEmptyList();
 form.addEventListener("submit", addTask);
-
-//удаление задач
 tasksList.addEventListener("click", deleteTask);
-
-//отмечаем задачу завершенной
 tasksList.addEventListener("click", doneTask)
 
 
@@ -32,34 +33,13 @@ function addTask (event) {
   //добавлеяем задачу в массив с задачами
   tasks.push(newTask);
 
-  //Формируем CSS класс
-  const cssClass = newTask.done ? "task-title task-title--done" : "task-title"
-
-  //формирование разметки для новой задачи
-  const taskHtml = `
-  <li id="${newTask.id}" class="list-group-item d-flex justify-content-between task-item">
-    <span class="${cssClass}">${newTask.text}</span>
-    <div class="task-item__buttons">
-      <button type="button" data-action="done" class="btn-action">
-        <img src="./img/tick.svg" alt="Done" width="18" height="18">
-      </button>
-      <button type="button" data-action="delete" class="btn-action">
-        <img src="./img/cross.svg" alt="Done" width="18" height="18">
-      </button>
-    </div>
-  </li>`;
-
-  //добавить задачу на страницу
-  tasksList.insertAdjacentHTML("beforeend", taskHtml);
+  renderTask (newTask);
 
   //Очищаем поле ввода и возвращаем в него фокус
   taskInput.value = "";
   taskInput.focus();
-
-  //скрываем блок "список пуст"
-  if (tasksList.children.length > 1){
-    emptyList.classList.add("none");
-  }
+  ckeckEmptyList();
+  saveToLocalStoarge ();
 }
 
 function deleteTask(event) {
@@ -72,25 +52,72 @@ function deleteTask(event) {
   const id = Number(parentNode.id);
 
   //находим индекс задачи в массиве
-  const index = tasks.findIndex((task) => task.id === id);
-
+  //! const index = tasks.findIndex((task) => task.id === id);
   //удаляем задачу из массива с задачами
-  tasks.splice(index, 1);
+  //! tasks.splice(index, 1);
+
+  //Удалениче задачи через фильтрацию массива
+  tasks = tasks.filter((task) => task.id !== id)
 
   //удаляем задачу из разметки
   parentNode.remove();
-
-  if (tasksList.children.length === 1){
-    emptyList.classList.remove("none");
-  };
+  ckeckEmptyList();
+  saveToLocalStoarge ();
 };
 
 function doneTask(event){
+  //проверяем клик не по кнопке
   if (event.target.dataset.action !== "done") return
 
   //проверяем клик по кнопке "задача выполнена"
   const parentNode = event.target.closest("li");
+
+  const id = Number(parentNode.id);
+  const task = tasks.find((task) => task.id === id)
+  task.done = !task.done;
+
   const taskTitle = parentNode.querySelector(".task-title")
   taskTitle.classList.toggle("task-title--done")
+  saveToLocalStoarge ();
 }
 
+function ckeckEmptyList () {
+  if (tasks.length === 0) {
+    const emptyListElement = `
+    <li id="emptyList" class="list-group-item empty-list">
+      <img src="./img/leaf.svg" alt="Empty" width="48" class="mt-3">
+      <div class="empty-list__title">Список дел пуст</div>
+    </li>`
+
+    tasksList.insertAdjacentHTML("afterbegin", emptyListElement);
+  } else {
+    const emptyListEl = document.querySelector("#emptyList")
+    emptyListEl ? emptyListEl.remove() : null;
+  }
+}
+
+function saveToLocalStoarge () {
+  localStorage.setItem("tasks", JSON.stringify(tasks))
+}
+
+function renderTask (task) {
+      //Формируем CSS класс
+      const cssClass = task.done ? "task-title task-title--done" : "task-title"
+
+      //формирование разметки для новой задачи
+      const taskHtml = `
+      <li id="${task.id}" class="list-group-item d-flex justify-content-between task-item">
+        <span class="${cssClass}">${task.text}</span>
+        <div class="task-item__buttons">
+          <button type="button" data-action="done" class="btn-action">
+            <img src="./img/tick.svg" alt="Done" width="18" height="18">
+          </button>
+          <button type="button" data-action="delete" class="btn-action">
+            <img src="./img/cross.svg" alt="Done" width="18" height="18">
+          </button>
+        </div>
+      </li>`;
+    
+      //добавить задачу на страницу
+      tasksList.insertAdjacentHTML("beforeend", taskHtml);
+}
