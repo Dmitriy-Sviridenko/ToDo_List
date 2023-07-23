@@ -9,6 +9,68 @@ body {
   flex-direction: column;
   justify-content: space-between;
 }
+
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 15px;
+}
+
+.main_title {
+  font-size: 50px;
+}
+
+.main_subtitle {
+  font-size: 24px;
+}
+
+.task-container {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  background-color: #fff;
+  border-radius: 15px;
+}
+
+.list-group {
+  padding: 0;
+}
+
+.list-group-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: rgb(182, 182, 182) 1px solid;
+  
+}
+
+.list-group-item:last-child{
+  border-bottom: none;
+  padding-bottom: 11px;
+}
+
+.task-title {
+  font-size: 16px;
+  margin: 0 35px;
+}
+
+.task-item__buttons {
+  margin: 0 35px;
+}
+
+.card {
+  background-color: #f8f9fa !important;
+}
+
+.card-header {
+  font-size: 26px;
+  padding: 10px 10px;
+  margin-bottom: 0;
+  background-color: rgba(0,0,0,.03);
+  border-bottom: 1px solid rgba(0,0,0,.125);
+}
+
+/*  */
 .aside {
   height: 400px;
 }

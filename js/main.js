@@ -106,7 +106,7 @@ function renderTask (task) {
 
       //формирование разметки для новой задачи
       const taskHtml = `
-      <li id="${task.id}" class="list-group-item d-flex justify-content-between task-item">
+      <li id="${task.id}" class="list-group-item task-item">
         <span class="${cssClass}">${task.text}</span>
         <div class="task-item__buttons">
           <button type="button" data-action="done" class="btn-action">
