@@ -60,6 +60,7 @@ body {
 
 .card {
   background-color: #f8f9fa !important;
+  border-radius: 15px;
 }
 
 .card-header {
@@ -68,37 +69,49 @@ body {
   margin-bottom: 0;
   background-color: rgba(0,0,0,.03);
   border-bottom: 1px solid rgba(0,0,0,.125);
+  border-radius: 15px 15px 0 0;
 }
 
-/*  */
-.aside {
-  height: 400px;
-}
-.main {
-  height: 400px;
-}
-.d-flex {
-  display: flex;
-}
 .task-title {
+  display: flex;
+  align-items: center;
   font-weight: 400;
-  padding-top: 5px;
 }
-.gray {
-  color: #BDBDBD;
-}
+
 .task-title--done {
   text-decoration: line-through;
   color: #CDCDCD;
 }
+
 .task-item__buttons {
   display: flex;
   column-gap: 5px;
 }
-.notify-holder {
-  height: 60px;
-  margin-bottom: 20px;
+
+.card-body {
+  display: block;
+  padding: 10px 10px 15px 10px;
 }
+
+
+.form-group {
+  margin-bottom: 10px;
+}
+
+.btn {
+  font-size: 17px;
+  color: #fff;
+  background-color: #5044e5bf;
+  padding: 7px 10px;
+  border-radius: 10px;
+}
+
+.form-control {
+  width: 98%;
+  padding: 10px 10px;
+  border-radius: 4px;
+}
+
 .empty-list {
   display: flex;
   flex-direction: column;
@@ -116,6 +129,7 @@ body {
   color: #42BE2A;
   font-size: 32px;
 }
+
 .btn-action {
     background-color: #e0e5ea;
     padding: 8px 10px;
@@ -139,10 +153,4 @@ body {
   pointer-events: none;
 }
 
-.none {
-  display: none !important;
-}
 
-.float-right {
-  float: right;
-}
